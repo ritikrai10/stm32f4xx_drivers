@@ -74,74 +74,17 @@ int main(void)
 
 	SPI2_Inits();
 
+	SPI_SSIConfig(SPI2,ENABLE);
+
 
 	SPI_PeripheralControl(SPI2,ENABLE);
 
 	SPI_SendData(SPI2,(uint8_t*)user_data,strlen(user_data));
+
+	SPI_PeripheralControl(SPI2,DISABLE);
 
 	while(1);
 
 
 	return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
