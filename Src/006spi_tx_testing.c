@@ -83,7 +83,12 @@ int main(void)
 
 
 
-	SPI_PeripheralControl(SPI2, DISABLE);
+
+
+	while( SPI_GetFlagStatus(SPI2,SPI_BUSY_FLAG) );
+
+					//Disable the SPI2 peripheral
+	SPI_PeripheralControl(SPI2,DISABLE);
 
 	while(1);
 

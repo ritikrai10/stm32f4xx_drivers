@@ -1,20 +1,5 @@
-/*
- * 007spi_txonly_ardunio.c
- *
- *  Created on: Sep 24, 2026
- *      Author: ritikrai
- */
-
-
-/*
- * 006spi_tx_testing.c
- *
- *  Created on: Sep 21, 2026
- *      Author: ritikrai
- */
 #include <string.h>
 #include "stm32f407xx.h"
-
 
 void delay(void)
 {
@@ -22,14 +7,24 @@ void delay(void)
 }
 
 
+void GPIO_ButtonInit(void)
+{
+	GPIO_handle_t GPIOBtn = {0};
 
+	// this is btn gpio configuration
+	GPIOBtn.pGPIOx = GPIOA;
+	GPIOBtn.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_0;
+	GPIOBtn.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IN;
+	GPIOBtn.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
+	GPIOBtn.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PUPD;
 
+	GPIO_PeriClockControl(GPIOA, ENABLE);
+	GPIO_Init(&GPIOBtn);
+}
 
 void SPI2_GPIOInits(void)
 {
-
 	GPIO_handle_t SPIPins = {0};
-
 
 	GPIO_PeriClockControl(GPIOB, ENABLE);
 
@@ -54,15 +49,13 @@ void SPI2_GPIOInits(void)
 
 	// NSS
 	SPIPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_12;
-	 GPIO_Init(&SPIPins);
+	GPIO_Init(&SPIPins);
 }
-
 
 void SPI2_Inits(void)
 {
 	// FIX 3: Initialize structure to zero
 	SPI_Handle_t SPI2handle = {0};
-
 
 	SPI_PeriClockControl(SPI2, ENABLE);
 
@@ -78,29 +71,13 @@ void SPI2_Inits(void)
 	SPI_Init(&SPI2handle);
 }
 
-
-
-int main(void)
-{
-	GPIO_handle_t Gpioled , GPIOBtn ;
-
-	Gpioled.pGPIOx = GPIOD;
-	Gpioled.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_12;
-	Gpioled.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_OUT;
-	Gpioled.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST ;
-	Gpioled.GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_PP ;
-	Gpioled.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PUPD;
-
-
-
-
-	GPIO_Init(&GPIOBtn);
-
-}
-
+// Single main() function to resolve the "redefinition of 'main'" error
 int main(void)
 {
 	char user_data[] = "Hello world";
+
+	// Initialize button for triggering transmission
+	GPIO_ButtonInit();
 
 	// Initialize GPIO pins for SPI2
 	SPI2_GPIOInits();
@@ -108,23 +85,34 @@ int main(void)
 	// Initialize SPI2 peripheral
 	SPI2_Inits();
 
-    SPI_SSOEConfig(SPI2,ENABLE);
-  while(1){
-    while( ! GPIO_ReadFromInputPin(GPIOA,GPIO_PIN_NO_0) );
 
-    delay();
+	SPI_SSOEConfig(SPI2, ENABLE);
 
-	// Enable the SPI2 peripheral
-	SPI_PeripheralControl(SPI2, ENABLE);
+	while(1)
+	{
+		// Wait until the button is pressed
+		while( ! GPIO_ReadFromInputPin(GPIOA, GPIO_PIN_NO_0) );
 
-	// Send the data
-	SPI_SendData(SPI2, (uint8_t*)user_data, strlen(user_data));
+		// Delay to avoid button debouncing
+		delay();
+
+		// Enable the SPI2 peripheral
+		SPI_PeripheralControl(SPI2, ENABLE);
+
+		uint8_t dataLen = strlen(user_data);
+		SPI_SendData(SPI2,&dataLen,1);
+
+		// Send the data
+		SPI_SendData(SPI2, (uint8_t*)user_data, strlen(user_data));
 
 
 
-	SPI_PeripheralControl(SPI2, DISABLE);
-  }
+		while( SPI_GetFlagStatus(SPI2,SPI_BUSY_FLAG) );
 
+				//Disable the SPI2 peripheral
+		SPI_PeripheralControl(SPI2,DISABLE);
+
+	}
 
 	return 0;
 }

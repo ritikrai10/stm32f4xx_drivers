@@ -122,7 +122,7 @@ void SPI_IRQHandling(SPI_Handle_t *pHandle);
 void SPI_PeripheralControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
 
 
-
+uint8_t SPI_GetFlagStatus(SPI_RegDef_t *pSPIx, uint32_t FlagName);
 
 
 

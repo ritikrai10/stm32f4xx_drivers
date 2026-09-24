@@ -180,7 +180,14 @@ void SPI_SSOEConfig(SPI_RegDef_t *pSPIx , uint8_t EnorDi)
 
 
 
-
+uint8_t SPI_GetFlagStatus(SPI_RegDef_t *pSPIx, uint32_t FlagName)
+{
+    if(pSPIx->SR & FlagName)
+    {
+        return FLAG_SET; // Make sure FLAG_SET is defined in your main header as 1
+    }
+    return FLAG_RESET;   // Make sure FLAG_RESET is defined in your main header as 0
+}
 
 
 
