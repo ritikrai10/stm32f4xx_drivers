@@ -235,7 +235,10 @@ typedef struct
 #define SPI2                   ((SPI_RegDef_t*)SPI2_BASEADDR)
 #define SPI3                   ((SPI_RegDef_t*)SPI3_BASEADDR)
 
-
+#define SPI_CR1_MSTR                   2
+#ifndef __weak
+#define __weak __attribute__((weak))
+#endif
 
 #define GPIOA_PCLK_EN()    ( RCC ->AHB1ENR |= ( 1 << 0) )
 #define GPIOB_PCLK_EN()    ( RCC ->AHB1ENR |= ( 1 << 1) )
