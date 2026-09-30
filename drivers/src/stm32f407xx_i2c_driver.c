@@ -94,3 +94,59 @@ void I2C_Init(I2C_Handle_t *pI2CHandle)
 	pI2CHandle->pI2Cx->TRISE = (tempreg & 0x3F);
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+void I2C_DeInit(I2C_RegDef_t *pI2Cx)
+{
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+void I2C_MasterSendData(I2C_Handle_t *pI2CHandle, uint8_t *pTxbuffer, uint32_t Len, uint8_t SlaveAddr, uint8_t Sr)
+{
+	I2C_GenerateStartCondition(pI2CHandle->pI2Cx);
+
+	while( !I2C_GetFlagStatus(pI2CHandle->pI2Cx, I2C_FLAG_SB) );
+
+	I2C_ExecuteAddressPhaseWrite(pI2CHandle->pI2Cx, SlaveAddr);
+
+	while( !I2C_GetFlagStatus(pI2CHandle->pI2Cx, I2C_FLAG_ADDR) );
+
+	I2C_ClearADDRFlag(pI2CHandle);
+
+	while(Len > 0)
+	{
+		while( !I2C_GetFlagStatus(pI2CHandle->pI2Cx, I2C_FLAG_TXE) );
+		pI2CHandle->pI2Cx->DR = *pTxbuffer;
+		pTxbuffer++;
+		Len--;
+	}
+
+	while( !I2C_GetFlagStatus(pI2CHandle->pI2Cx, I2C_FLAG_TXE) );
+
+	while( !I2C_GetFlagStatus(pI2CHandle->pI2Cx, I2C_FLAG_BTF) );
+
+	if(Sr == I2C_DISABLE_SR)
+		I2C_GenerateStopCondition(pI2CHandle->pI2Cx);
+}
