@@ -65,7 +65,7 @@ typedef struct
 
 
 #define GPIO_OP_TYPE_PP          0
-#define GPIO_OP_TYPE_OO          1
+#define GPIO_OP_TYPE_OD          1
 
 
 

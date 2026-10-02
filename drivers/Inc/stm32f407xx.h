@@ -287,7 +287,9 @@ typedef struct
 #define I2C2_PCLK_EN()    ( RCC ->APB1ENR |= ( 1 << 22) )
 #define I2C3_PCLK_EN()    ( RCC ->APB1ENR |= ( 1 << 23) )
 
-
+#define I2C1_PCLK_DI()   (RCC->APB1ENR &= ~(1 << 21))
+#define I2C2_PCLK_DI()   (RCC->APB1ENR &= ~(1 << 22))
+#define I2C3_PCLK_DI()   (RCC->APB1ENR &= ~(1 << 23))
 
 
 // spi clock enable macrps
