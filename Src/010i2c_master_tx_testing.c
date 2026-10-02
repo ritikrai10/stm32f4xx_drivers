@@ -47,7 +47,7 @@ void I2C1_GPIOInits(void)
 
 
 
-	I2CPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_9;
+	I2CPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_7;
 
 	GPIO_Init(&I2CPins);
 
