@@ -539,7 +539,7 @@ typedef struct
 // bit position of usart_SR
 #define USART_SR_PE                      0
 #define USART_SR_FE                      1
-#define USART_SR_NF                      2
+#define USART_SR_NE                      2
 #define USART_SR_ORE                     3
 #define USART_SR_IDLE                    4
 #define USART_SR_RXNE                    5
