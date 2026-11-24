@@ -274,6 +274,12 @@ typedef struct
 #define I2C2  				((I2C_RegDef_t*)I2C2_BASEADDR)
 #define I2C3  				((I2C_RegDef_t*)I2C3_BASEADDR)
 
+#define USART1  			((USART_RegDef_t*)USART1_BASEADDR)
+#define USART2  			((USART_RegDef_t*)USART2_BASEADDR)
+#define USART3  			((USART_RegDef_t*)USART3_BASEADDR)
+#define UART4  				((USART_RegDef_t*)UART4_BASEADDR)
+#define UART5  				((USART_RegDef_t*)UART5_BASEADDR)
+#define USART6  			((USART_RegDef_t*)USART6_BASEADDR)
 
 
 
@@ -331,6 +337,12 @@ typedef struct
 #define UART5_PCLK_EN()    ( RCC ->APB2ENR |= ( 1 << 20) )
 #define UART6_PCLK_EN()    ( RCC ->APB2ENR |= ( 1 << 5) )
 
+#define USART1_PCLK_DI()    (RCC->APB2ENR &= ~(1 << 4))
+#define USART2_PCLK_DI()    (RCC->APB1ENR &= ~(1 << 17))
+#define USART3_PCLK_DI()    (RCC->APB1ENR &= ~(1 << 18))
+#define UART4_PCLK_DI()     (RCC->APB1ENR &= ~(1 << 19))
+#define UART5_PCLK_DI()     (RCC->APB1ENR &= ~(1 << 20))
+#define USART6_PCLK_DI()    (RCC->APB2ENR &= ~(1 << 5))
 
 
 

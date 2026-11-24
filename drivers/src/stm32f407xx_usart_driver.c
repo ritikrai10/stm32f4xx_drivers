@@ -11,17 +11,17 @@
 
 
 
-void USART_PerpheralControl(USART_RegDef_t *pUSARTx , uint8_t Cmd)
+void USART_PeripheralControl(USART_RegDef_t *pUSARTx, uint8_t EnOrDi)
 {
-	if(Cmd == ENABLE)
-	{
-		pUSARTx->CR1 |= (1 << 13);
-	}else
-	{
-		pUSARTx->CR1 &= ~(1 << 13);
-	}
+    if(EnOrDi == ENABLE)
+    {
+        pUSARTx->CR1 |= (1 << USART_CR1_UE);
+    }
+    else
+    {
+        pUSARTx->CR1 &= ~(1 << USART_CR1_UE);
+    }
 }
-
 
 
 
@@ -31,37 +31,37 @@ void USART_PeriClockControl(USART_RegDef_t *pUSARTx, uint8_t EnorDi)
 	{
 		if(pUSARTx == USART1)
 		{
-			USART1_PCCK_EN();
+			USART1_PCLK_EN();
 		}
 		else if (pUSARTx == USART2)
 		{
-			USART2_PCCK_EN();
+			USART2_PCLK_EN();
 		}
 		else if (pUSARTx == USART3)
 		{
-			USART3_PCCK_EN();
+			USART3_PCLK_EN();
 		}
 		else if (pUSARTx == UART4)
 		{
-			UART4_PCCK_EN();
+			UART4_PCLK_EN();
 		}
 	}else
 	{
 		if(pUSARTx == USART1)
 		{
-			USART1_PCCK_DI();
+			USART1_PCLK_DI();
 		}
 		else if (pUSARTx == USART2)
 		{
-			USART2_PCCK_DI();
+			USART2_PCLK_DI();
 		}
 		else if (pUSARTx == USART3)
 		{
-			USART3_PCCK_DI();
+			USART3_PCLK_DI();
 		}
 		else if (pUSARTx == UART4)
 		{
-			UART4_PCCK_DI();
+			UART4_PCLK_DI();
 		}
 	}
 }
@@ -77,10 +77,7 @@ uint8_t USART_GetFlagStatus(USART_RegDef_t *pUSARTx, uint8_t StatusFlagName)
    return RESET;
 }
 
-void USART_ReceiveData(USART_Handle_t *pUSARTHandle, uint8_t *pRxBuffer, uint32_t Len)
-{
 
-}
 
 
 /*********************************************************************
@@ -251,7 +248,7 @@ void USART_SendData(USART_Handle_t *pUSARTHandle, uint8_t *pTxBuffer, uint32_t L
 	}
 
 	//Implement the code to wait till TC flag is set in the SR
-	while( ! USART_GetFlagStatus(pUSARTHandle->pUSARTx,USART_FLAG_TODO));
+	while( ! USART_GetFlagStatus(pUSARTHandle->pUSARTx,USART_FLAG_TC));
 }
 
 

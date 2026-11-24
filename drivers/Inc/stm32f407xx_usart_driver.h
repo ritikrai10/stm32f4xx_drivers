@@ -22,9 +22,15 @@ typedef struct
 
 typedef struct
 {
-	USART_RegDef_t *pUSARTx;
-	USART_Config_t USART_Config;
-}USART_Handle_t;
+    USART_RegDef_t *pUSARTx;
+    USART_Config_t USART_Config;
+    uint8_t *pTxBuffer;
+    uint8_t *pRxBuffer;
+    uint32_t TxLen;
+    uint32_t RxLen;
+    uint8_t TxBusyState;
+    uint8_t RxBusyState;
+} USART_Handle_t;
 
 
 
@@ -35,7 +41,9 @@ typedef struct
 #define USART_MODE_ONLY_TX 0
 #define USART_MODE_ONLY_RX 1
 #define USART_MODE_TXRX  2
-
+#define USART_READY         0
+#define USART_BUSY_IN_RX    1
+#define USART_BUSY_IN_TX    2
 /*
  *@USART_Baud
  *Possible options for USART_Baud
@@ -93,44 +101,45 @@ typedef struct
 #define USART_FLAG_TC 			( 1 << USART_SR_TC)
 
 
-
 /*
  * Peripheral Clock setup
  */
-void USART_PeriClockControl(USART_RegDef_t *pUSARTx, uint8_t EnorDi);
+void USART_PeriClockControl(USART_RegDef_t *pUSARTx, uint8_t EnOrDi);
 
 /*
  * Init and De-init
  */
 void USART_Init(USART_Handle_t *pUSARTHandle);
-void USART_DeInit(USART_RegDef_t *pUSARTx);
-
+void USART_DeInit(USART_Handle_t *pUSARTHandle);
 
 /*
  * Data Send and Receive
  */
-void USART_SendData(USART_RegDef_t *pUSARTx,uint8_t *pTxBuffer, uint32_t Len);
-void USART_ReceiveData(USART_RegDef_t *pUSARTx, uint8_t *pRxBuffer, uint32_t Len);
+void USART_SendData(USART_Handle_t *pUSARTHandle, uint8_t *pTxBuffer, uint32_t Len);
+void  USART_ReceiveData(USART_Handle_t *pUSARTHandle,uint8_t *pRxBuffer, uint32_t Len);
 uint8_t USART_SendDataIT(USART_Handle_t *pUSARTHandle,uint8_t *pTxBuffer, uint32_t Len);
-uint8_t USART_ReceiveDataIT(USART_Handle_t *pUSARTHandle, uint8_t *pRxBuffer, uint32_t Len);
+uint8_t USART_ReceiveDataIT(USART_Handle_t *pUSARTHandle,uint8_t *pRxBuffer, uint32_t Len);
 
 /*
  * IRQ Configuration and ISR handling
  */
 void USART_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi);
 void USART_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
-void USART_IRQHandling(USART_Handle_t *pHandle);
+void USART_IRQHandling(USART_Handle_t *pUSARTHandle);
 
 /*
  * Other Peripheral Control APIs
  */
-void USART_PeripheralControl(USART_RegDef_t *pUSARTx, uint8_t EnOrDi);
-uint8_t USART_GetFlagStatus(USART_RegDef_t *pUSARTx , uint32_t FlagName);
+
+uint8_t USART_GetFlagStatus(USART_RegDef_t *pUSARTx, uint8_t StatusFlagName);
 void USART_ClearFlag(USART_RegDef_t *pUSARTx, uint16_t StatusFlagName);
+void USART_PeripheralControl(USART_RegDef_t *pUSARTx, uint8_t EnOrDi);
 void USART_SetBaudRate(USART_RegDef_t *pUSARTx, uint32_t BaudRate);
 
+
 /*
- * Application callback
+ * Application Callbacks
  */
-void USART_ApplicationEventCallback(USART_Handle_t *pUSARTHandle,uint8_t AppEv);
+void USART_ApplicationEventCallback(USART_Handle_t *pUSARTHandle,uint8_t ApEv);
+
 #endif /* INC_STM32F407XX_USART_DRIVER_H_ */
